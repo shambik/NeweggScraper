@@ -121,9 +121,30 @@ namespace NeweggScraper
                             if (NotifyMe.NotifyTelegram)
                             {
                                 var msg = "";
+                                var cartLink = "";
+                                string[] link = null;
                                 foreach (var item in scraper.InStockEntries)
                                 {
-                                    msg += $"{item.Brand} \n\n{item.Description}\n\n {item.Price}\n\n {item.Link} \n\n -----------------------------------------------------\n\n\n";
+                                    try
+                                    {
+                                        link = item.Link.Split('?');
+                                        var cart = link[0].Split('/');
+                                        for (int i = 0; i < cart.Length; i++)
+                                        {
+                                            if (cart[i] == "p")
+                                            {
+                                                cartLink = cart[i + 1];
+                                            }
+                                        }
+                                    }
+                                    catch (Exception exception)
+                                    {
+
+                                    }
+
+                                    var addToCart =
+                                        $"https://secure.newegg.com/Shopping/AddtoCart.aspx?Submit=ADD&ItemList=";
+                                    msg += $"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{addToCart + cartLink}\n-----------------------------------------------------\n";
                                 }
                                 var bot = new TelegramBotClient(botToken);
                                 var s = await bot.SendTextMessageAsync(telegramChannel, msg);

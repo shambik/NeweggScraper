@@ -364,8 +364,14 @@ namespace NeweggScraper.Utils
         private void AddItemToRelevantCollection(string itemTitle, string itemDesc, string itemLink, string price)
         {
             //Debug.Print($"Brand: {itemTitle} \nDescription {itemDesc} \nPrice: {price} \nProduct Link: {itemLink}");
+            var link = itemLink.Split('?');
+            itemLink = link[0];
+
             if (isInStock)
             {
+                HTML_BODY +=
+                    $"<tr><td>{itemTitle}</td><td>{itemDesc}</td><td>{price}</td><td><a href=\"{itemLink}\">Go To Product</a></td></tr>";
+                _inStockCountForHtml = InStockEntries.Count.ToString();
                 InStockEntries.Add(new EntryModel
                 {
                     Brand = itemTitle,
@@ -373,9 +379,6 @@ namespace NeweggScraper.Utils
                     Link = itemLink,
                     Price = price
                 });
-                HTML_BODY +=
-                    $"<tr><td>{itemTitle}</td><td>{itemDesc}</td><td>{price}</td><td><a href=\"{itemLink}\">Go To Product</a></td></tr>";
-                _inStockCountForHtml = InStockEntries.Count.ToString();
             }
             else
             {

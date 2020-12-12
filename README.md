@@ -16,7 +16,7 @@ You can also scan the zip file by your Self on that site if youd like.
 
 
 
-## So how does it works
+## So how does it work
 
 - After you compile the code / unzipped the zip file Run the "Neweggscraper.exe" file
 

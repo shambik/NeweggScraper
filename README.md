@@ -1,5 +1,5 @@
 # NeweggScraper
-This tool allows you to track items on Newegg site and notify when in stock inventory was founs.
+This tool allows you to track items on Newegg site and notify when in stock inventory was found.
 
 [This is a compiled version of the app](https://did.li/XTPfT)
 

@@ -24,7 +24,7 @@ You can also scan the zip file by your Self on that site if youd like.
 
 - In here you can use the filters u want, apply the filters and then Copy the link from your browser and paste it in the Software text box, hit run This will return your search results.
 
-- In order to use the notification features click on the Software Menu button and chhose Notify Me
+- In order to use the notification features click on the Software Menu button and choose Notify Me
 
 - In here we have 3 options email notification, sound notification and telegram notification
 

@@ -30,7 +30,7 @@ You can also scan the zip file by your Self on that site if youd like.
 
 - I show in this video how it works [YouTube](https://youtu.be/uw7knG21juA)
 
-The video doesnt cover the telegram feature so ill explains here
+The video doesnt cover the telegram feature so ill explain here
 
 - In order to use it ull need to create a new bot in telegram and ur new channel
 

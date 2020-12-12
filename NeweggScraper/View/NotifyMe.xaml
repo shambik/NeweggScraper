@@ -1,0 +1,245 @@
+﻿<UserControl x:Class="NeweggScraper.View.NotifyMe"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NeweggScraper.View"
+             xmlns:home="clr-namespace:NeweggScraper"
+             mc:Ignorable="d" 
+             MaxWidth="580"
+             MaxHeight="800"
+             d:DesignWidth="576"
+             d:DesignHeight="800 "
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             Foreground="{DynamicResource MaterialDesignDarkForeground}"
+             FontFamily="{DynamicResource MaterialDesignFont}" Loaded="NotifyMeLoaded" 
+             x:Name="NotifyUC" Width="580" MinWidth="0.4"
+            >
+
+    <materialDesign:DrawerHost>
+        <materialDesign:Card HorizontalAlignment="Stretch" 
+                         VerticalAlignment="Stretch"
+                         >
+            <materialDesign:Card.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="{StaticResource backGround}"/>
+                </LinearGradientBrush>
+            </materialDesign:Card.Background>
+            <Grid x:Name="notifyMe"
+            Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+
+                <Grid Grid.Row="1" 
+                      Grid.Column="0"
+                      Grid.ColumnSpan="15"
+                      Grid.RowSpan="29">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <CheckBox x:Name="notifyMeMail"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                                  IsChecked="False"
+                                  Content="Notify By Mail" 
+                                  Checked="notifyChecked" 
+                                  Unchecked="notifyUnchecked"
+                        />
+
+                    <Button Content="Clear Mailing List"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                Grid.Row="1"
+                                x:Name="clearMailBtn"
+                                Click="ClearMailListClicked"/>
+
+                    <CheckBox x:Name="notifyMeSound"
+                              Grid.Column="5"
+                              Grid.ColumnSpan="4"
+                              Content="Notify By Sound"
+                              IsChecked="False"
+                              Checked="NotifyMeSound_OnChecked"
+                              Unchecked="NotifyMeSound_OnUnchecked"/>
+
+                    <TextBlock Grid.Column="5"
+                                   Grid.Row="1"
+                                   Grid.ColumnSpan="2">
+                            <materialDesign:PackIcon Kind="MusicBox"
+                                                     Name="SoundIcon"
+                                                     Foreground="White" 
+                                                     Width="45" 
+                                                     Height="42"
+                                                     Margin="-5 -1 0 0"/>
+                    </TextBlock>
+
+
+                    <CheckBox x:Name="notifyMeTelegram"
+                              Grid.Column="10"
+                              Grid.ColumnSpan="4"
+                              Content="Notify In Telegram"
+                              IsChecked="False"
+                              Checked="NotifyMeTelegram_OnChecked"
+                              Unchecked="NotifyMeTelegram_OnUnchecked"/>
+
+                    <TextBlock Grid.Column="10"
+                               Grid.Row="1"
+                               Grid.ColumnSpan="2">
+                        <materialDesign:PackIcon Kind="Telegram"
+                                                 Name="TelegramIcon"
+                                                 Foreground="White" 
+                                                 Width="40" 
+                                                 Height="40"
+                                                 Margin="-5 -1 0 0"/>
+                    </TextBlock>
+
+                    <StackPanel Grid.Column="10"
+                                Grid.Row="2"
+                                Grid.ColumnSpan="4"
+                                Grid.RowSpan="5"
+                                Margin="0 0 10 0">
+                        <TextBlock  Text="Bot Token:"/>
+                        <TextBox 
+                            Background="White"
+                            Foreground="Black"
+                            Name="BotTokenBox"
+                            TextChanged="BotTokenBox_OnTextChanged"
+                        >
+
+                        </TextBox>
+                        <TextBlock  Text="Token entered:"
+                                    Name="existingToken"
+                                    Margin="0 5 0 0"/>
+                        <TextBlock Margin="0 20 0 0" 
+                                   Text="Telegram Channel:"/>
+                        <TextBox 
+                            Background="White"
+                            Foreground="Black"
+                            Name="TelegramChannelBox"
+                            TextChanged="TelegramChannelBox_OnTextChanged"
+                        >
+
+                        </TextBox>
+                        <TextBlock  Text="Channel entered:"
+                                    Name="existingChannel"
+                                    Margin="0 5 0 0"/>
+                    </StackPanel>
+
+
+
+                    <StackPanel x:Name="sendTo"
+                        Grid.Column="0" 
+                        Grid.Row="2" 
+                        Grid.ColumnSpan="4" 
+                        Grid.RowSpan="5" 
+                        Orientation="Vertical">
+
+
+                        <TextBlock Margin="0 10 0 0" Text="Mail To:"/>
+                        <TextBox 
+                         Background="White"
+                         Foreground="Black"
+                         x:Name="toMail"
+                         Height="Auto"
+                         TextChanged="TextBox_TextChanged" KeyDown="AddMailKeyDown"/>
+                        <Button x:Name="addMailBtn"
+                        Content="Add To Mailing list" 
+                        Click="AddToMailingListClickedUcBtnClick"></Button>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Grid.Column="0" 
+                            Grid.Row="5" 
+                            Grid.ColumnSpan="5" 
+                            Grid.RowSpan="9" 
+                            Orientation="Vertical">
+                    <TextBlock x:Name="mailList"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Text="Mail will be sent to:"
+                               Height="30"
+                               Margin="5"/>
+                    <TextBlock 
+                        x:Name="mailingListBlock"
+                        Height="Auto"
+                        Padding="10"/>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </materialDesign:DrawerHost >
+
+
+</UserControl>

@@ -20,7 +20,7 @@ You can also scan the zip file by your Self on that site if youd like.
 
 - After you compile the code / unzipped the zip file Run the "Neweggscraper.exe" file
 
-- Now go to newegg site, click on the site Menu button And navigate to whayever category you want, For this example we will go to graphics cards, So go to components > Graphic cards > desktop
+- Now go to newegg site, click on the site Menu button And navigate to whatever category you want, For this example we will go to graphics cards, So go to components > Graphic cards > desktop
 
 - In here you can use the filters u want, apply the filters and then Copy the link from your browser and paste it in the Software text box, hit run This will return your search results.
 

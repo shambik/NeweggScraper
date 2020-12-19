@@ -362,46 +362,6 @@ namespace NeweggScraper
         private void maxiBtn(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Maximized;
-        }
-
-        #region Comments
-
-        //public void InitializeGmail()
-        //{
-        //    UserCredential credential;
-        //    GmailService service;
-        //    using (var stream =
-        //        new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-        //    {
-        //        // The file token.json stores the user's access and refresh tokens, and is created
-        //        // automatically when the authorization flow completes for the first time.
-        //        string credPath = "token.json";
-        //        credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-        //            GoogleClientSecrets.Load(stream).Secrets,
-        //            new[] {
-        //                GmailService.Scope.GmailSend,
-        //                GmailService.Scope.GmailCompose,
-        //                GmailService.Scope.GmailLabels,
-        //                GmailService.Scope.GmailReadonly
-        //            },
-        //            "XXXX",
-        //            CancellationToken.None,
-
-        //            new FileDataStore(credPath, true)).Result;
-        //        Console.WriteLine("Credential file saved To: " + credPath);
-        //    }
-
-        //    // Create Gmail API service.
-        //    service = new GmailService(new BaseClientService.Initializer()
-        //    {
-        //        ApiKey = "AIzaSyCq8Ye0TpnZg8NqKvaZIHVD15IbaES77CQ",
-        //        HttpClientInitializer = credential,
-        //        ApplicationName = ApplicationName,
-        //    });
-
-
-        //}
-
-        #endregion
+        } 
     }
 }

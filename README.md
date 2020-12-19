@@ -1,5 +1,5 @@
 # NeweggScraper
-This tool allows you to track items on Newegg site and notify when in stock inventory was founs.
+This tool allows you to track items on Newegg site and notify when in stock inventory was found.
 
 [This is a compiled version of the app](https://did.li/XTPfT)
 
@@ -16,21 +16,21 @@ You can also scan the zip file by your Self on that site if youd like.
 
 
 
-## So how does it works
+## So how does it work
 
 - After you compile the code / unzipped the zip file Run the "Neweggscraper.exe" file
 
-- Now go to newegg site, click on the site Menu button And navigate to whayever category you want, For this example we will go to graphics cards, So go to components > Graphic cards > desktop
+- Now go to newegg site, click on the site Menu button And navigate to whatever category you want, For this example we will go to graphics cards, So go to components > Graphic cards > desktop
 
 - In here you can use the filters u want, apply the filters and then Copy the link from your browser and paste it in the Software text box, hit run This will return your search results.
 
-- In order to use the notification features click on the Software Menu button and chhose Notify Me
+- In order to use the notification features click on the Software Menu button and choose Notify Me
 
 - In here we have 3 options email notification, sound notification and telegram notification
 
 - I show in this video how it works [YouTube](https://youtu.be/uw7knG21juA)
 
-The video doesnt cover the telegram feature so ill explains here
+The video doesnt cover the telegram feature so ill explain here
 
 - In order to use it ull need to create a new bot in telegram and ur new channel
 

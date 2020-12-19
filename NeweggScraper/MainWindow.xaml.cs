@@ -56,7 +56,7 @@ namespace NeweggScraper
         public static string SearchingIn1 { get; set; }
 
         public static MainWindow Instance { get; private set; }
-        
+
 
         public MainWindow()
         {
@@ -94,7 +94,7 @@ namespace NeweggScraper
                     do
                     {
                         SearchFilters.Children.Clear();
-                        
+
                         var a = notifyMeUC.DataContext.ToString().Equals("NeweggScraper.ViewModels.NotifyMeViewModel");
                         scraper.InStockEntries.Clear();
                         scraper.OutOfStockEntries.Clear();
@@ -114,7 +114,7 @@ namespace NeweggScraper
                             SearchingIn.Text = SearchingIn1;
                         }
 
-                        
+
                         if (scraper.InStockEntries.Count > 0)
                         {
                             // Send message to Telegram channel
@@ -123,19 +123,30 @@ namespace NeweggScraper
                                 var msg = "";
                                 var cartLink = "";
                                 string[] link = null;
+                                List<string> msgs = new List<string>();
                                 foreach (var item in scraper.InStockEntries)
                                 {
                                     try
                                     {
-                                        link = item.Link.Split('?');
-                                        var cart = link[0].Split('/');
-                                        for (int i = 0; i < cart.Length; i++)
+                                        if (!item.Link.ToLower().Contains("combodeal"))
                                         {
-                                            if (cart[i] == "p")
+                                            link = item.Link.Split('?');
+                                            var cart = link[0].Split('/');
+                                            for (int i = 0; i < cart.Length; i++)
                                             {
-                                                cartLink = cart[i + 1];
+                                                if (cart[i] == "p")
+                                                {
+                                                    cartLink = cart[i + 1];
+                                                }
                                             }
                                         }
+                                        else
+                                        {
+                                            link = item.Link.Split('?');
+                                            var cart = item.Link.Split('=');
+                                            cartLink = cart[1];
+                                        }
+
                                     }
                                     catch (Exception exception)
                                     {
@@ -144,10 +155,32 @@ namespace NeweggScraper
 
                                     var addToCart =
                                         $"https://secure.newegg.com/Shopping/AddtoCart.aspx?Submit=ADD&ItemList=";
-                                    msg += $"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{addToCart + cartLink}\n-----------------------------------------------------\n";
+                                    if (!item.Link.ToLower().Contains("combodeal"))
+                                    {
+                                        msgs.Add($"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n");
+                                        msg += $"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n";
+                                    }
+                                    else
+                                    {
+                                        msgs.Add($"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{item.Link} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n");
+                                        msg += $"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{item.Link} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n";
+                                    }
+
                                 }
                                 var bot = new TelegramBotClient(botToken);
-                                var s = await bot.SendTextMessageAsync(telegramChannel, msg);
+                                // handling telegram too long msg limit
+                                int ind = 0;
+                                for (int i = 0; ind < msgs.Count; i++)
+                                {
+                                    string newMsg = "";
+                                    for (int j = 0; j <= 8; j++)
+                                    {
+                                        if (ind < msgs.Count)
+                                            newMsg += msgs[ind];
+                                        ind++;
+                                    }
+                                    var s = await bot.SendTextMessageAsync(telegramChannel, newMsg);
+                                }
                             }
 
                             // Make a sound
@@ -175,7 +208,7 @@ namespace NeweggScraper
                         if (runInLoop.IsChecked ?? false)
                             await Task.Delay((loopTimeInt > 0) ? loopTimeInt * 1000 : 0);
                     } while (runInLoop.IsChecked ?? false);
-                    
+
                     running.Text = "Stopped";
                     await Task.Delay(2000);
                     running.Visibility = Visibility.Hidden;
@@ -186,7 +219,7 @@ namespace NeweggScraper
                 {
                     MessageBox.Show(ex.Message);
                 }
-                Run.IsEnabled = true;            
+                Run.IsEnabled = true;
             }
             else
             {
@@ -210,7 +243,7 @@ namespace NeweggScraper
             DataContext = e.NewValue;
         }
 
-        
+
 
 
         private void monthBtnClicked(object sender, RoutedEventArgs e)

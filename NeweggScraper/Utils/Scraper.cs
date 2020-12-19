@@ -59,7 +59,7 @@ namespace NeweggScraper.Utils
         private string HTML_OPEN1 = "<!DOCTYPE html><html><head><style>body{font-family: arial, sans-serif;}" +
                                    "table {font-family: arial, sans-serif;border-collapse: collapse; width: 100%;}th{background-color:#f5c449;} td, th {border: 1px solid #dddddd; text-align: left;padding: 8px;}tr:nth-child(even){background-color: #dddddd;}</style></head><body><h2> ";
         private const string HTML_OPEN2 = " RESULTS</h2>" +
-                                         "<table><tr><th> BRAND </th><th> DESCRIPTION </th><th> PRICE </th><th> LINK </th></tr> ";
+                                         "<table><tr><th> BRAND </th><th> DESCRIPTION </th><th> PRICE </th><th> LINK </th><th> Add To Cart </th></tr> ";
         private string HTML_BODY = "";
         private const string HTML_CLOSE = "</table></body></html>";
         #endregion
@@ -70,11 +70,11 @@ namespace NeweggScraper.Utils
             SearchResults = "";
             HTML_BODY = "";
             var web = HtmlWebLoad(page, out var resultsHtml, out var doc);
-            
+
             // number of pages in search result
             CheckHowManyPages(doc, out var pages);
             resultsHtml = GetItemResults(page, pages, web, resultsHtml);
-            
+
             SearchResults += HTML_OPEN1 + _inStockCountForHtml + HTML_OPEN2;
             SearchResults += HTML_BODY;
             SearchResults += HTML_CLOSE;
@@ -283,7 +283,7 @@ namespace NeweggScraper.Utils
                         }
 
                         classExist = IsClassExist(item, "div", "class", "txt-ads-title");
-                        if(classExist)
+                        if (classExist)
                             continue;
 
                     }
@@ -292,25 +292,25 @@ namespace NeweggScraper.Utils
 
                         itemTitle = "NO BRAND ASSIGNED";
                     }
-                    
+
                     var itemDesc = HttpUtility.HtmlDecode(item.SelectSingleNode(".//a[@class = 'item-title']").InnerText);
                     if (itemTitle.Contains("COMBO DEAL"))
                     {
-                         itemLink =
-                            HttpUtility.HtmlDecode(item.SelectSingleNode(".//a[@class = 'item-img combo-img-0']").Attributes["href"].Value);
+                        itemLink =
+                           HttpUtility.HtmlDecode(item.SelectSingleNode(".//a[@class = 'item-img combo-img-0']").Attributes["href"].Value);
                     }
                     else
                     {
-                         itemLink =
-                            HttpUtility.HtmlDecode(item.SelectSingleNode(".//a[@class = 'item-img']").Attributes["href"].Value);
+                        itemLink =
+                           HttpUtility.HtmlDecode(item.SelectSingleNode(".//a[@class = 'item-img']").Attributes["href"].Value);
                     }
-                    
+
                     var price = item.SelectSingleNode(".//div[@class = 'item-action']").FirstChild.InnerText;
 
                     price = FixPriceString(ref resultsHtml, price, item);
                     price = CheckIfItemIsInStock(item, price);
-                    AddItemToRelevantCollection(itemTitle, itemDesc, itemLink, price);
-                    
+                    AddItemToRelevantCollection(itemTitle, itemDesc, itemLink, price, item);
+
                 }
                 return resultsHtml;
             }
@@ -361,23 +361,31 @@ namespace NeweggScraper.Utils
             }
             return price;
         }
-        private void AddItemToRelevantCollection(string itemTitle, string itemDesc, string itemLink, string price)
+        private void AddItemToRelevantCollection(string itemTitle, string itemDesc, string itemLink, string price, HtmlNode item)
         {
             //Debug.Print($"Brand: {itemTitle} \nDescription {itemDesc} \nPrice: {price} \nProduct Link: {itemLink}");
-            var link = itemLink.Split('?');
-            itemLink = link[0];
-
+            var addToCartLink = "";
             if (isInStock)
             {
+                var link = new string[1];
+
+                if (itemTitle != "COMBO DEAL")
+                {
+                    link = itemLink.Split('?');
+                    itemLink = link[0];
+                }
+
+                addToCartLink = AddToCartLink(itemLink, item);
                 HTML_BODY +=
-                    $"<tr><td>{itemTitle}</td><td>{itemDesc}</td><td>{price}</td><td><a href=\"{itemLink}\">Go To Product</a></td></tr>";
+                   $"<tr><td>{itemTitle}</td><td>{itemDesc}</td><td>{price}</td><td><a href=\"{itemLink}\">Go To Product</a></td><td><a href=\"{addToCartLink}\">Add To Cart</a></td></tr>";
                 _inStockCountForHtml = InStockEntries.Count.ToString();
                 InStockEntries.Add(new EntryModel
                 {
                     Brand = itemTitle,
                     Description = itemDesc,
                     Link = itemLink,
-                    Price = price
+                    Price = price,
+                    AddToCart = addToCartLink
                 });
             }
             else
@@ -387,9 +395,79 @@ namespace NeweggScraper.Utils
                     Brand = itemTitle,
                     Description = itemDesc,
                     Link = itemLink,
-                    Price = price
+                    Price = price,
                 });
             }
+        }
+
+        private string AddToCartLink(string itemLink, HtmlNode item)
+        {
+            string[] link = null;
+            var cartLink = "";
+            var itemNumber = "";
+            var setLocation = "";
+            try
+            {
+                classExist = IsClassExist(item, "div", "class", "item-stock");
+                if (classExist)
+                {
+                    itemNumber = HttpUtility.HtmlDecode(item.SelectSingleNode(".//div[@class = 'item-stock']").Attributes["id"].Value);
+                    var fixNumber = itemNumber.Split('_');
+                    if (fixNumber[1].Contains("-"))
+                    {
+                        string result = string.Concat(fixNumber[1].Where(c => !char.IsPunctuation(c)));
+                        itemNumber = result;
+                    }
+                    else
+                    {
+                        itemNumber = fixNumber[1];
+                    }
+
+                }
+
+                if (!itemLink.ToLower().Contains("combodeal"))
+                {
+                    link = itemLink.Split('?');
+                    var cart = link[0].Split('/');
+                    for (int i = 0; i < cart.Length; i++)
+                    {
+                        if (cart[i] == "p")
+                        {
+                            if (!itemNumber.Contains("9SIA"))
+                                cartLink = $"N82E168{itemNumber}";
+                            else
+                            {
+                                cartLink = itemNumber;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    link = itemLink.Split('?');
+                    var cart = itemLink.Split('=');
+                    cartLink = cart[1];
+                }
+
+
+            }
+            catch (Exception exception)
+            {
+
+            }
+            var location = itemLink.Split('/');
+
+            for (int i = 0; i < location.Length; i++)
+            {
+                if (location[i].Contains("global"))
+                {
+                    setLocation = $"global/{location[i + 1]}/";
+                }
+            }
+            var addToCart =
+                $"https://secure.newegg.com/{setLocation}Shopping/AddtoCart.aspx?Submit=ADD&ItemList={cartLink}";
+
+            return addToCart;
         }
         private void AddSearchFiltersDynamically(HtmlDocument doc)
         {
@@ -406,8 +484,8 @@ namespace NeweggScraper.Utils
 
                 /*MainWindow.Instance.CategoryValue.Text*/
 
-                MainWindow.Instance.CategoryValue.Text  = doc.DocumentNode.SelectSingleNode("//*[@class = 'is-current']").InnerText;
-                
+                MainWindow.Instance.CategoryValue.Text = doc.DocumentNode.SelectSingleNode("//*[@class = 'is-current']").InnerText;
+
             }
 
             try
@@ -472,14 +550,14 @@ namespace NeweggScraper.Utils
                         }
                     }
                 }
-                
+
             }
             catch (Exception e)
             {
-                
+
             }
 
-            
+
         }
         #endregion
 

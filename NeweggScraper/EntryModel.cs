@@ -12,6 +12,7 @@ namespace NeweggScraper
         public string Description { get; set; }
         public string Link { get; set; }
         public string Price { get; set; }
+        public string AddToCart { get; set; }
 
     }
 }

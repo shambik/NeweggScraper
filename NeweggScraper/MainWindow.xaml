@@ -171,7 +171,7 @@
                                VerticalAlignment="Center" 
                                FontSize="20"
                                FontWeight="Bold"
-                               Text="Newegg InvenTory Check" />
+                               Text="Newegg Inventory Check" />
 
                 </StackPanel>
 

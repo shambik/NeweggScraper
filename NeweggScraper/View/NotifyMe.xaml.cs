@@ -27,6 +27,8 @@ namespace NeweggScraper.View
         public static bool Notify { get; set; }
         public static bool NotifySound { get; set; }
         public static bool NotifyTelegram { get; set; }
+        public static bool NotifyDiscord { get; set; }
+        private int loopInterval;
 
         public NotifyMe()
         {
@@ -63,6 +65,11 @@ namespace NeweggScraper.View
             mailingListBlock.Text = MainWindow.mailListt;
             existingToken.Text = $"Token entered:\n{MainWindow.botToken}";
             existingChannel.Text = $"Channel Entered:\n{MainWindow.telegramChannel}";
+            existingDiscordToken.Text = $"Token entered:\n{MainWindow.DiscordBotToken}";
+            loopInterval = !string.IsNullOrEmpty(MainWindow.Instance.loopTime.Text) ? Int32.Parse(MainWindow.Instance.loopTime.Text) : 0;
+
+            discordLoopDelay.Text =
+                $"{MainWindow.DicordLoopDelay} loops ({(loopInterval * MainWindow.DicordLoopDelay)} seconds)";
 
             if (!notifyMeMail.IsChecked ?? false)
             {
@@ -98,6 +105,26 @@ namespace NeweggScraper.View
                 TelegramChannelBox.Opacity = 0.5;
                 TelegramChannelBox.IsEnabled = false;
                 notifyMeTelegram.IsChecked = false;
+            }
+
+
+            if (NotifyDiscord)
+            {
+                DiscordTokenBox.IsEnabled = true;
+                DiscordTokenBox.Opacity = 1;
+                notifyMeDiscord.IsChecked = true;
+                DiscordLoopDelay.IsEnabled = true;
+                DiscordLoopDelay.Opacity = 1;
+
+            }
+            else
+            {
+                DiscordTokenBox.IsEnabled = false;
+                DiscordTokenBox.Opacity = 0.5;
+                notifyMeDiscord.IsChecked = false;
+                DiscordLoopDelay.IsEnabled = false;
+                DiscordLoopDelay.Opacity = 0.5;
+
             }
         }
 
@@ -186,6 +213,47 @@ namespace NeweggScraper.View
         {
             MainWindow.telegramChannel = TelegramChannelBox.Text;
             existingChannel.Text = $"Channel Entered:\n{MainWindow.telegramChannel}";
+        }
+
+        private void DiscordBotTokenBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            MainWindow.DiscordBotToken = DiscordTokenBox.Text;
+            existingDiscordToken.Text = $"Token entered:\n{MainWindow.DiscordBotToken}";
+        }
+
+        private void NotifyMeDiscord_OnChecked(object sender, RoutedEventArgs e)
+        {
+            NotifyDiscord = true;
+            DiscordIcon.Foreground = Brushes.MediumPurple;
+            DiscordTokenBox.IsEnabled = true;
+            DiscordTokenBox.Opacity = 1;
+            DiscordLoopDelay.IsEnabled = true;
+            DiscordLoopDelay.Opacity = 1;
+
+        }
+
+        private void NotifyMeDiscord_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            NotifyDiscord = false;
+            DiscordIcon.Foreground = Brushes.White;
+            DiscordTokenBox.IsEnabled = false;
+            DiscordLoopDelay.IsEnabled = false;
+            DiscordTokenBox.Opacity = 0.5;
+            DiscordLoopDelay.Opacity = 0.5;
+        }
+
+
+        private void DiscordLoopDelay_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MainWindow.Instance.IsAnumber(DiscordLoopDelay.Text))
+            {
+                if (!string.IsNullOrEmpty(DiscordLoopDelay.Text))
+                    MainWindow.DicordLoopDelay = int.Parse(DiscordLoopDelay.Text);
+            }
+
+            loopInterval = !string.IsNullOrEmpty(MainWindow.Instance.loopTime.Text) ? Int32.Parse(MainWindow.Instance.loopTime.Text) : 0;
+            discordLoopDelay.Text =
+                $"{MainWindow.DicordLoopDelay} loops ({(loopInterval * MainWindow.DicordLoopDelay)} seconds)";
         }
     }
 

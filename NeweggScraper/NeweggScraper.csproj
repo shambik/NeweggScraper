@@ -166,6 +166,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Utils\Discord.cs" />
     <Compile Include="Utils\Mail\Email.cs" />
     <Compile Include="Utils\Scraper.cs" />
     <Compile Include="ViewModels\NotifyMeViewModel.cs" />

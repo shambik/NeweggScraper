@@ -51,6 +51,9 @@ namespace NeweggScraper
         public static string mailListt = "";
         public static string botToken = "";
         public static string telegramChannel = "";
+        public static string DiscordBotToken = "";
+        public static int DicordLoopDelay;
+
 
 
         public static string SearchingIn1 { get; set; }
@@ -75,6 +78,7 @@ namespace NeweggScraper
         // Scrape Site Data
         private async void BtnScraper_Click(object sender, RoutedEventArgs e)
         {
+
             if (!string.IsNullOrEmpty(UrlInput.Text))
             {
                 Run.IsEnabled = false;
@@ -87,10 +91,11 @@ namespace NeweggScraper
 
                 await Task.Delay(2000);
 
-                if (!IsAnumber() && loopTime.IsEnabled)
+                if (!IsAnumber(loopTime.Text) && loopTime.IsEnabled)
                     return;
                 try
                 {
+                    int discordDelay = 0;
                     do
                     {
                         SearchFilters.Children.Clear();
@@ -117,13 +122,15 @@ namespace NeweggScraper
 
                         if (scraper.InStockEntries.Count > 0)
                         {
-                            // Send message to Telegram channel
-                            if (NotifyMe.NotifyTelegram)
+                            var msg = "";
+                            var cartLink = "";
+                            string[] link = null;
+                            List<string> msgs = new List<string>();
+
+
+                            if (NotifyMe.NotifyTelegram || NotifyMe.NotifyDiscord)
                             {
-                                var msg = "";
-                                var cartLink = "";
-                                string[] link = null;
-                                List<string> msgs = new List<string>();
+
                                 foreach (var item in scraper.InStockEntries)
                                 {
                                     try
@@ -153,35 +160,56 @@ namespace NeweggScraper
 
                                     }
 
-                                    var addToCart =
-                                        $"https://secure.newegg.com/Shopping/AddtoCart.aspx?Submit=ADD&ItemList=";
+                                    //var addToCart =
+                                    //    $"https://secure.newegg.com/Shopping/AddtoCart.aspx?Submit=ADD&ItemList=";
                                     if (!item.Link.ToLower().Contains("combodeal"))
                                     {
                                         msgs.Add($"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n");
-                                        msg += $"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n";
                                     }
                                     else
                                     {
                                         msgs.Add($"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{item.Link} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n");
-                                        msg += $"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{item.Link} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n";
                                     }
 
-                                }
-                                var bot = new TelegramBotClient(botToken);
-                                // handling telegram too long msg limit
-                                int ind = 0;
-                                for (int i = 0; ind < msgs.Count; i++)
-                                {
-                                    string newMsg = "";
-                                    for (int j = 0; j <= 8; j++)
+                                    // Discord Notification
+                                    if (NotifyMe.NotifyDiscord)
                                     {
-                                        if (ind < msgs.Count)
-                                            newMsg += msgs[ind];
-                                        ind++;
+                                        if (discordDelay == 0)
+                                        {
+                                            Discord.SendDiscord(DiscordBotToken, item);
+                                            await Task.Delay(300);
+                                        }
+
+
+
+                                        if (discordDelay == DicordLoopDelay)
+                                        {
+                                            discordDelay = 0;
+                                        }
                                     }
-                                    var s = await bot.SendTextMessageAsync(telegramChannel, newMsg);
+                                }
+                                discordDelay++;
+
+                                // Send message to Telegram channel
+                                if (NotifyMe.NotifyTelegram)
+                                {
+                                    var bot = new TelegramBotClient(botToken);
+                                    // handling telegram too long msg limit
+                                    int ind = 0;
+                                    for (int i = 0; ind < msgs.Count; i++)
+                                    {
+                                        string newMsg = "";
+                                        for (int j = 0; j <= 8; j++)
+                                        {
+                                            if (ind < msgs.Count)
+                                                newMsg += msgs[ind];
+                                            ind++;
+                                        }
+                                        var s = await bot.SendTextMessageAsync(telegramChannel, newMsg);
+                                    }
                                 }
                             }
+
 
                             // Make a sound
                             if (NotifyMe.NotifySound)
@@ -329,17 +357,17 @@ namespace NeweggScraper
 
         private void loopTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IsAnumber();
+            IsAnumber(loopTime.Text);
         }
 
-        private bool IsAnumber()
+        public bool IsAnumber(string num)
         {
-            bool isAnumber = Int32.TryParse(loopTime.Text, out loopTimeInt);
-            if (loopTime.IsEnabled)
-            {
-                if (!isAnumber)
-                    MessageBox.Show("Please provide a valid number for the loop");
-            }
+            bool isAnumber = Int32.TryParse(num, out loopTimeInt);
+
+
+            if (!isAnumber)
+                MessageBox.Show("Please provide a valid number for the loop");
+
             return isAnumber;
         }
 
@@ -362,6 +390,6 @@ namespace NeweggScraper
         private void maxiBtn(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Maximized;
-        } 
+        }
     }
 }

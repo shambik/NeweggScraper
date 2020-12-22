@@ -130,13 +130,14 @@
                     <CheckBox x:Name="notifyMeSound"
                               Grid.Column="5"
                               Grid.ColumnSpan="4"
+                              Grid.Row="6"
                               Content="Notify By Sound"
                               IsChecked="False"
                               Checked="NotifyMeSound_OnChecked"
                               Unchecked="NotifyMeSound_OnUnchecked"/>
 
                     <TextBlock Grid.Column="5"
-                                   Grid.Row="1"
+                                   Grid.Row="7"
                                    Grid.ColumnSpan="2">
                             <materialDesign:PackIcon Kind="MusicBox"
                                                      Name="SoundIcon"
@@ -198,7 +199,57 @@
                                     Margin="0 5 0 0"/>
                     </StackPanel>
 
+                    <CheckBox x:Name="notifyMeDiscord"
+                              Grid.Column="5"
+                              Grid.ColumnSpan="4"
+                              Grid.Row="0"
+                              Content="Notify In Discord"
+                              Checked="NotifyMeDiscord_OnChecked"
+                              Unchecked="NotifyMeDiscord_OnUnchecked"/>
 
+                    <TextBlock Grid.Column="5"
+                               Grid.Row="1"
+                               Grid.ColumnSpan="2">
+                        <materialDesign:PackIcon Kind="Discord"
+                                                 Name="DiscordIcon"
+                                                 Foreground="White" 
+                                                 Width="40" 
+                                                 Height="40"
+                                                 Margin="-5 -1 0 0"/>
+                    </TextBlock>
+
+                    <StackPanel Grid.Column="5"
+                                Grid.Row="2"
+                                Grid.ColumnSpan="4"
+                                Grid.RowSpan="5"
+                                Margin="0 0 10 0">
+                        <TextBlock  Text="WebHooks URL:"/>
+                        <TextBox 
+                            Background="White"
+                            Foreground="Black"
+                            Name="DiscordTokenBox"
+                            TextChanged="DiscordBotTokenBox_OnTextChanged"
+                        >
+
+                        </TextBox>
+                        <TextBlock  Text="Token entered:"
+                                    Name="existingDiscordToken"
+                                    Margin="0 5 0 0"/>
+                        <TextBlock Margin="0 20 0 0" 
+                                   Text="Send message every"/>
+                        <TextBox 
+                            Background="White"
+                            Foreground="Black"
+                            Name="DiscordLoopDelay"
+                            Width="auto"
+                            TextChanged="DiscordLoopDelay_OnTextChanged"
+                        >
+
+                        </TextBox>
+                        <TextBlock  Text="loops"
+                                    Name="discordLoopDelay"
+                                    Margin="0 5 0 0"/>
+                    </StackPanel>
 
                     <StackPanel x:Name="sendTo"
                         Grid.Column="0" 
@@ -227,7 +278,7 @@
                             Grid.RowSpan="9" 
                             Orientation="Vertical">
                     <TextBlock x:Name="mailList"
-                               FontSize="18"
+                               FontSize="16"
                                FontWeight="Bold"
                                Text="Mail will be sent to:"
                                Height="30"

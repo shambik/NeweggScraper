@@ -1,7 +1,7 @@
 # NeweggScraper
 This tool allows you to track items on Newegg site and notify when in stock inventory was found.
 
-[This is a compiled version of the app](https://did.li/XTPfT)
+[This is a compiled version of the app](https://did.li/estlC)
 
 [This is a virus scan of the compiled zip from virustotal site](https://www.virustotal.com/gui/file/1d0324085e9779cb59146c9b1985dd9370a15986a976f4474a6137e7e80b5ff7/detection)
 

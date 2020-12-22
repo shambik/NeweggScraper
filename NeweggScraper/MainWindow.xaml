@@ -377,7 +377,7 @@
                            Grid.Row="13"
                            Grid.ColumnSpan="10"
                            Name="inStockLabel"
-                           Text="In STock"
+                           Text="In Stock"
                            Foreground="LawnGreen"
                            Margin="0 2 0 5"/>
                 <ScrollViewer x:Name="table1"
@@ -401,7 +401,7 @@
 
                 <!--Out Of Stock DataGrid -->
                 <TextBlock Name="outOfStockLabel"
-                           Text="Out Of STock"
+                           Text="Out Of Stock"
                            Margin="0 2 0 5"
                            Foreground="Red"
                            Grid.Column="0" 

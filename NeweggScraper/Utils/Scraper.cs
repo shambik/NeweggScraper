@@ -64,6 +64,16 @@ namespace NeweggScraper.Utils
         private const string HTML_CLOSE = "</table></body></html>";
         #endregion
 
+        public Scraper()
+        {
+
+        }
+
+        public Scraper(Scraper s)
+        {
+            this._inStockEntries = new ObservableCollection<EntryModel>(s._inStockEntries);
+        }
+
         #region Public Funcs
         public string ScrapeData(string page)
         {
@@ -309,6 +319,8 @@ namespace NeweggScraper.Utils
 
                     price = FixPriceString(ref resultsHtml, price, item);
                     price = CheckIfItemIsInStock(item, price);
+                    if (price.Contains("Shippi"))
+                        price += "ng";
                     AddItemToRelevantCollection(itemTitle, itemDesc, itemLink, price, item);
 
                 }
@@ -542,7 +554,6 @@ namespace NeweggScraper.Utils
 
                                 };
 
-                                //MainWindow.Instance.SearchFiltersChild.Children.Add(innerBlock);
                                 panel.Children.Insert(secondBlock, innerBlock);
                                 secondBlock++;
                             }

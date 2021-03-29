@@ -28,7 +28,7 @@ namespace NeweggScraper.Utils
                         new
                         {
                             title = "Stock Notification",
-                            description = $"**Product Page**\n{item.Link}\n\n**Store**\nNewegg\n\n**Brand**\n{item.Brand}\n\n**Description**\n{item.Description}",
+                            description = $"**Product Page**\n{item.Link}\n\n**Add To Cart**\n{item.AddToCart}\n\n**Store**\nNewegg\n\n**Brand**\n{item.Brand}\n\n**Price**\n{item.Price}\n\n**Description**\n{item.Description}",
                             color = "9697064"
                         }
                     }
@@ -40,4 +40,3 @@ namespace NeweggScraper.Utils
     }
 
 }
-

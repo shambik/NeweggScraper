@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -42,6 +43,7 @@ namespace NeweggScraper
     public partial class MainWindow : Window
     {
         private Scraper scraper;
+        private Scraper prevScraper;
         private NotifyMeViewModel _notifyMe = new NotifyMeViewModel();
         //public NotifyMe n = new NotifyMe();
         public Email mail = new Email();
@@ -92,10 +94,21 @@ namespace NeweggScraper
                 await Task.Delay(2000);
 
                 if (!IsAnumber(loopTime.Text) && loopTime.IsEnabled)
+                {
+                    running.Text = "Stopped";
+                    Run.IsEnabled = true;
+                    runInLoop.IsChecked = false;
                     return;
+                }
+
                 try
                 {
                     int discordDelay = 0;
+                    var msg = "";
+                    string prevMsg = "";
+                    var curMsg = "";
+
+
                     do
                     {
                         SearchFilters.Children.Clear();
@@ -104,6 +117,12 @@ namespace NeweggScraper
                         scraper.InStockEntries.Clear();
                         scraper.OutOfStockEntries.Clear();
                         scraper.ScrapeData(UrlInput.Text);
+
+                        // store current results in order to compare wit prev
+                        foreach (var item in scraper.InStockEntries)
+                        {
+                            curMsg += item.Link;
+                        }
 
                         //await Task.Delay(1000);
                         inStockLabel.Text = $"{scraper.InStockEntries.Count} items found In Stock";
@@ -122,7 +141,8 @@ namespace NeweggScraper
 
                         if (scraper.InStockEntries.Count > 0)
                         {
-                            var msg = "";
+
+
                             var cartLink = "";
                             string[] link = null;
                             List<string> msgs = new List<string>();
@@ -153,15 +173,12 @@ namespace NeweggScraper
                                             var cart = item.Link.Split('=');
                                             cartLink = cart[1];
                                         }
-
                                     }
                                     catch (Exception exception)
                                     {
 
                                     }
 
-                                    //var addToCart =
-                                    //    $"https://secure.newegg.com/Shopping/AddtoCart.aspx?Submit=ADD&ItemList=";
                                     if (!item.Link.ToLower().Contains("combodeal"))
                                     {
                                         msgs.Add($"{item.Brand} \n\n{item.Description}\n\n{item.Price}\n\n{link[0]} \n\nAdd To Cart\n{item.AddToCart}\n-----------------------------------------------------\n");
@@ -174,17 +191,15 @@ namespace NeweggScraper
                                     // Discord Notification
                                     if (NotifyMe.NotifyDiscord)
                                     {
-                                        if (discordDelay == 0)
+                                        if (discordDelay == 0 || curMsg != prevMsg)
                                         {
                                             Discord.SendDiscord(DiscordBotToken, item);
-                                            await Task.Delay(300);
+                                            await Task.Delay(500);
                                         }
-
-
 
                                         if (discordDelay == DicordLoopDelay)
                                         {
-                                            discordDelay = 0;
+                                            discordDelay = -1;
                                         }
                                     }
                                 }
@@ -233,6 +248,12 @@ namespace NeweggScraper
                             }
                             Scraper.SearchResults = "";
                         }
+
+                        if (curMsg != "")
+                            prevMsg = curMsg;
+                        curMsg = "";
+                        prevScraper = new Scraper(scraper);
+
                         if (runInLoop.IsChecked ?? false)
                             await Task.Delay((loopTimeInt > 0) ? loopTimeInt * 1000 : 0);
                     } while (runInLoop.IsChecked ?? false);
@@ -357,15 +378,17 @@ namespace NeweggScraper
 
         private void loopTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IsAnumber(loopTime.Text);
+            int loop = IsAnumber(loopTime.Text) ? Int32.Parse(loopTime.Text) : 0;
+            loopTimeInt = loop;
         }
 
         public bool IsAnumber(string num)
         {
-            bool isAnumber = Int32.TryParse(num, out loopTimeInt);
+            int n;
+            bool isAnumber = Int32.TryParse(num, out n);
 
 
-            if (!isAnumber)
+            if (!isAnumber && runInLoop.IsChecked == true)
                 MessageBox.Show("Please provide a valid number for the loop");
 
             return isAnumber;
